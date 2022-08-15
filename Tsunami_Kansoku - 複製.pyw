@@ -1,12 +1,8 @@
-from asyncore import write
-from encodings import utf_8
 import time
 import requests
 import urllib3
 import xmltodict
-import os
 from bs4 import BeautifulSoup
-import xml.etree.ElementTree as ET
 urllib3.disable_warnings()
 
 #xml = requests.get("https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml")
