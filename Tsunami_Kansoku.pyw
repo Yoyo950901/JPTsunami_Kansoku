@@ -14,8 +14,8 @@ urllib3.disable_warnings()
 headers = dict() #測試
 headers["Cookie"]="__test=eb3f55df3488e2eb5ad76e961a3d8e90" #測試
 
-#xml = requests.get("https://mcsm.stevened7246.cf/eqvol.xml",headers=headers) #測試
-xml = requests.get("http://www.yoyo0901.byethost16.com/eqvol.xml",headers=headers) #測試
+xml = requests.get("https://mcsm.stevened7246.cf/eqvol.xml") #測試
+#xml = requests.get("http://www.yoyo0901.byethost16.com/eqvol.xml",headers=headers) #測試
 xml.encoding = "utf-8"
 sp = BeautifulSoup(xml.text, 'xml')
 #取得気象庁XML(地震/火山相關)
