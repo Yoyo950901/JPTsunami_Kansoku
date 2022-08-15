@@ -96,11 +96,11 @@ if "沖合" in title: #判定是否為"沖合津波観測"
 
 print(title)
 a = 0
-b = 0
 for i in item:
     if type(i) == str:
         i = tsunami["Observation"]["Item"]
         a = 1
+    b = 0
     for j in i["Station"]:
         if type(j) == str:
             j = i["Station"]
