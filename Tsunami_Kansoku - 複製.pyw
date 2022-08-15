@@ -99,36 +99,36 @@ print(title)
 for i in item:
     if type(i) == str:
         i = tsunami["Observation"]["Item"]
-        for j in i["Station"]:
-            if type(j) == str:
-                j = i["Station"]
-            name = j["Name"]
-            ampm = ""
-            try:
-                maxheitime = j["MaxHeight"]["DateTime"]
-                maxheitimeh = maxheitime[11:13]
-                if int(maxheitimeh) > 12:
-                    maxheitimeh = int(maxheitimeh) - 12
-                    ampm = "午後"
-                else:
-                    ampm = "午前"
-                if str(maxheitimeh)[:1] == "0":
-                    maxheitimeh = str(maxheitimeh).replace("0","",1)
-            
-                maxheitimem = maxheitime[14:16]
-                if maxheitimem[:1] == "0":
-                    maxheitimem = maxheitimem.replace("0","",1)
+    for j in i["Station"]:
+        if type(j) == str:
+            j = i["Station"]
+        name = j["Name"]
+        ampm = ""
+        try:
+            maxheitime = j["MaxHeight"]["DateTime"]
+            maxheitimeh = maxheitime[11:13]
+            if int(maxheitimeh) > 12:
+                maxheitimeh = int(maxheitimeh) - 12
+                ampm = "午後"
+            else:
+                ampm = "午前"
+            if str(maxheitimeh)[:1] == "0":
+                maxheitimeh = str(maxheitimeh).replace("0","",1)
+        
+            maxheitimem = maxheitime[14:16]
+            if maxheitimem[:1] == "0":
+                maxheitimem = maxheitimem.replace("0","",1)
 
-                maxheitime = f"{maxheitimeh}時{maxheitimem}分頃　"
-            except:
-                maxheitime = ""
-            try:
-                height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
-            except:
-                height = j["MaxHeight"]["Condition"]
-            try:
-                if j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@condition"] == "上昇中":
-                    rising = "(上昇中)"
-            except:
-                rising = ""
-            print(f"{name}　{ampm}{maxheitime}{height}{rising}")
+            maxheitime = f"{maxheitimeh}時{maxheitimem}分頃　"
+        except:
+            maxheitime = ""
+        try:
+            height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
+        except:
+            height = j["MaxHeight"]["Condition"]
+        try:
+            if j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@condition"] == "上昇中":
+                rising = "(上昇中)"
+        except:
+            rising = ""
+        print(f"{name}　{ampm}{maxheitime}{height}{rising}")
