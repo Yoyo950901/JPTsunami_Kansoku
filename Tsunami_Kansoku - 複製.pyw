@@ -95,9 +95,7 @@ if "沖合" in title: #判定是否為"沖合津波観測"
     oki = "沖合"
 
 print(title)
-
-a = 0
-b = 0
+a=0
 for i in item:
     if type(i) == str:
         i = tsunami["Observation"]["Item"]
@@ -135,8 +133,8 @@ for i in item:
                 rising = "(上昇中)"
         except:
             rising = ""
-        print(f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}")
-        if b == 1:
-            break
-    if a == 1:
-        break
+        print(f"{name}　{ampm}{maxheitime}{height}{rising}")
+        a+=1
+        if a>3:
+            exit()
+        
