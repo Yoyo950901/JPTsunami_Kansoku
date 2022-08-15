@@ -134,7 +134,7 @@ for i in item:
                 rising = "(上昇中)"
         except:
             rising = ""
-        print(f"{name}　{ampm}{maxheitime}{height}{rising}")
+        print(f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}")
         if b == 1:
             break
     if a == 1:
