@@ -122,7 +122,7 @@ for i in item:
             if maxheitimem[:1] == "0":
                 maxheitimem = maxheitimem.replace("0","",1)
 
-            maxheitime = f"{maxheitimeh}時{maxheitimem}分頃　"
+            maxheitime = f"{maxheitimeh}時{maxheitimem}分　"
         except:
             maxheitime = ""
         try:
