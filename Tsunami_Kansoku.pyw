@@ -99,22 +99,21 @@ print(title)
 a = 0
 n = 0
 dic1 = {}
-list2 = []
-for i in item:
-    if type(i) == str:
+for i in item: #此區將各地海嘯觀測資料寫入到"dic1"字典裡
+    if type(i) == str: #如果只有1個區域，那麼直接指定路徑
         i = tsunami["Observation"]["Item"]
         a = 1
     b = 0
-    for j in i["Station"]:
+    for j in i["Station"]: #如果1個區域裡只有1個點觀測到海嘯，那麼直接指定路徑
         if type(j) == str:
             j = i["Station"]
             b = 1
-        name = j["Name"]
+        name = j["Name"] #觀測點名稱
         ampm = ""
-        try:
+        try: #最大波觀測時間
             maxheitime = j["MaxHeight"]["DateTime"]
             datetime = (j["MaxHeight"]["DateTime"])[:16]
-            maxheitimeh = maxheitime[11:13]
+            maxheitimeh = maxheitime[11:13] #將24小時制轉為12小時制，並優化顯示格式
             if int(maxheitimeh) > 12:
                 maxheitimeh = int(maxheitimeh) - 12
                 ampm = "午後"
@@ -128,11 +127,11 @@ for i in item:
                 maxheitimem = maxheitimem.replace("0","",1)
 
             maxheitime = f"{maxheitimeh}時{maxheitimem}分　"
-        except:
+        except: #如果無觀測時間，那麼將時間指定為0，避免下方出錯
             maxheitime = ""
             datetime = "0000-00-00T00:00"
         
-        try:
+        try: #將海嘯高度轉為XXmXXcm
             height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
             heightcm = height.split("．")[1].replace("ｍ","０ｃｍ")
             heightcm = heightcm.replace("００ｃｍ","")
@@ -141,28 +140,28 @@ for i in item:
                 heightm = ""
             height = heightm + heightcm
             heightsor = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["#text"]
-        except:
+        except: #處理高度為"觀測中"的資料
             height = j["MaxHeight"]["Condition"]
             heightsor = j["MaxHeight"]["Condition"]
-        try:
+        try: #處理含有"上升中"的資料
             if j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@condition"] == "上昇中":
                 rising = "(上昇中)"
                 n = 0.01
         except:
             rising = ""
-        try:
+        try: #輸出資料到字典
             dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}{datetime}"] = (float(heightsor)+n)
-        except:
+        except: #輸出高度為"觀測中"的資料到字典
             dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}{datetime}"] = (0.0)
         if b == 1:
             break
     if a == 1:
         break
 
-for i in range(2):
-    height = sorted(sorted(dic1.items(), reverse=False, key = lambda d:d[0][-16:]), reverse=True, key = lambda d: d[1])
+for i in range(2): #輸出資料到檔案
+    height = sorted(sorted(dic1.items(), reverse=False, key = lambda d:d[0][-16:]), reverse=True, key = lambda d: d[1]) #排序高度及時間
 
-    if oki == "（沖合）":
+    if oki == "（沖合）": 
         output = "沖合で津波を観測"
         file(5)
         log()
