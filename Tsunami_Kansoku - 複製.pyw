@@ -1,3 +1,5 @@
+from multiprocessing import Value
+import re
 import time
 import requests
 import urllib3
@@ -64,6 +66,7 @@ def file(y=8): #寫入資料到output文字檔
     print(output)
     time.sleep(y)
 
+# url = "http://www.yoyo0901.byethost16.com/津波観測/32-39_12_06_191025_VTSE51.xml"
 
 xml2 = requests.get(url) #取得資料
 
@@ -99,8 +102,8 @@ print(title)
 
 
 a = 0
-list1 = "["
-list2 = "["
+dic1 = {}
+list2 = []
 for i in item:
     if type(i) == str:
         i = tsunami["Observation"]["Item"]
@@ -132,6 +135,11 @@ for i in item:
             maxheitime = ""
         try:
             height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
+            heightcm = height.split("．")[1].replace("ｍ","０ｃｍ")
+            heightm = height.split("．")[0] + "ｍ"
+            if heightm == "０ｍ":
+                heightm = ""
+            height = heightm + heightcm
             heightsor = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["#text"]
         except:
             height = j["MaxHeight"]["Condition"]
@@ -141,23 +149,18 @@ for i in item:
                 rising = "(上昇中)"
         except:
             rising = ""
-        list1 += (f'"津波観測　{name}　{ampm}{maxheitime}{height}{rising}",')
-        list2 += (f'"{heightsor}",')
+        try:
+            dic1[f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}"] = (float(heightsor))
+        except:
+            dic1[f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}"] = (0.0)
         if b == 1:
             break
     if a == 1:
         break
 
-list1 = list1[:-1] + "]"
-list2 = list2[:-1] + "]"
 
-print(list1)
+# print(dic1)
+height = sorted(dic1.items(), reverse=True, key = lambda d: d[1])
 
-def test(x):
-    try:
-        return x
-    except:
-        return '99999999999999999999'
-ab = sorted(list2,key=lambda x:test(x))
-
-print(list1[1])
+for i in height:
+    print(i[0])
