@@ -96,11 +96,9 @@ if "取消" in data["Head"]["InfoType"]: #判定是否取消
 oki = ""
 if "沖合" in title: #判定是否為"沖合津波観測"
     oki = "（沖合）"
-    
+
 
 print(title)
-
-
 
 a = 0
 n = 0
@@ -165,14 +163,7 @@ for i in item:
     if a == 1:
         break
 
-
-# print(dic1)
-
-def s1(x):
-    for i in x[0]:
-        return x[0][-16:]
-
-height = sorted(sorted(dic1.items(), reverse=False, key = lambda d:s1(d)), reverse=True, key = lambda d: d[1])
+height = sorted(sorted(dic1.items(), reverse=False, key = lambda d:d[0][-16:]), reverse=True, key = lambda d: d[1])
 
 if oki == "（沖合）":
     output = "沖合で津波を観測"
