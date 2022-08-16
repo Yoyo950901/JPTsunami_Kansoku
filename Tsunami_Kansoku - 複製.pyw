@@ -173,4 +173,5 @@ else:
     file(1)
 
 for i in height:
-    print((i[0])[:-16])
+    output = (i[0])[:-16]
+    file(1)
