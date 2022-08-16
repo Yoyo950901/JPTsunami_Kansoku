@@ -1,3 +1,5 @@
+from multiprocessing import Value
+import re
 import time
 import requests
 import urllib3
@@ -5,43 +7,39 @@ import xmltodict
 from bs4 import BeautifulSoup
 urllib3.disable_warnings()
 
-#xml = requests.get("https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml")
+xml = requests.get("https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml")
 
-headers = dict() #測試
-headers["Cookie"]="__test=eb3f55df3488e2eb5ad76e961a3d8e90" #測試
+# headers = dict() #測試
+# headers["Cookie"]="__test=eb3f55df3488e2eb5ad76e961a3d8e90" #測試
+# xml = requests.get("https://mcsm.stevened7246.cf/eqvol.xml",headers=headers) #測試
+# xml = requests.get("http://www.yoyo0901.byethost16.com/eqvol.xml",headers=headers) #測試
 
-xml = requests.get("https://mcsm.stevened7246.cf/eqvol.xml",headers=headers) #測試
-#xml = requests.get("http://www.yoyo0901.byethost16.com/eqvol.xml",headers=headers) #測試
 xml.encoding = "utf-8"
 sp = BeautifulSoup(xml.text, 'xml')
 #取得気象庁XML(地震/火山相關)
 
-
-if xml.status_code == 200:
+if xml.status_code == 200: #判定資料是否取得正常
     print("資料取得正常")
 else:
     print("資料取得失敗，請檢查網路或氣象廳網站是否正常")
     exit()
-#判定資料是否取得正常
-
 
 logfile = open("log.txt", encoding="utf8")
 logid1 = logfile.read()
 logfile.close
 #讀取上次情報ID
 
-
 z = ""
 for i in sp.select("entry"): #搜尋標題為"津波警報・注意報・予報a"的XML
-    if i.title.text == "津波情報a" or i.title.text == "津波情報a" and "津波観測" in i.content.text: #沖合の津波観測に関する情報 津波情報a
+    if i.title.text == "津波情報a" or i.title.text == "沖合の津波観測に関する情報" and "津波観測" in i.content.text: #沖合の津波観測に関する情報 津波情報a
         url = i.id.text #若取得海嘯觀測的資料 設定URL
-        # logid2 = i.update.text
-        # if logid1 == logid2: #判定情報是否為新的
-        #   exit()
-        # f = open("D:\地震\Tsunami\jmalog.txt", "w",encoding="utf8")
-        # f.write(logid2)
-        # f.close()
-        # #寫入情報ID
+        logid2 = i.update.text
+        if logid1 == logid2: #判定情報是否為新的
+          exit()
+        f = open("D:\地震\Tsunami\jmalog.txt", "w",encoding="utf8")
+        f.write(logid2)
+        f.close()
+        #寫入情報ID
         z = "a"
         break
 
@@ -50,7 +48,7 @@ if z == "": #如果未在XML取得海嘯資訊則退出
     exit()
 
 
-def log(): #讀取Log檔ID 若跟此次ID不一樣則退出
+def log(): #讀取Log檔ID 若跟此次ID不一樣(代表有新的資料輸出)則退出
     logfile = open('log.txt', encoding="utf8")
     logid3 = logfile.read()
     logfile.close
@@ -64,6 +62,8 @@ def file(y=8): #寫入資料到output文字檔
     print(output)
     time.sleep(y)
 
+# url = "http://www.yoyo0901.byethost16.com/津波観測/32-39_12_06_191025_VTSE51.xml"
+# url = "http://www.yoyo0901.byethost16.com/津波観測/32-39_12_05_191025_VTSE52.xml"
 
 xml2 = requests.get(url) #取得資料
 
@@ -82,9 +82,9 @@ body = data["Body"]
 tsunami = body["Tsunami"] #海嘯觀測資訊
 item = tsunami["Observation"]["Item"]
 
-# if data["Control"]["Status"] == "訓練": #判定是否為訓練報
-#     print("これは訓練です")
-#     exit()
+if data["Control"]["Status"] == "訓練": #判定是否為訓練報
+    print("これは訓練です")
+    exit()
 
 cancel = ""
 if "取消" in data["Head"]["InfoType"]: #判定是否取消
@@ -92,10 +92,14 @@ if "取消" in data["Head"]["InfoType"]: #判定是否取消
 
 oki = ""
 if "沖合" in title: #判定是否為"沖合津波観測"
-    oki = "沖合"
+    oki = "（沖合）"
+
 
 print(title)
 a = 0
+n = 0
+dic1 = {}
+list2 = []
 for i in item:
     if type(i) == str:
         i = tsunami["Observation"]["Item"]
@@ -109,6 +113,7 @@ for i in item:
         ampm = ""
         try:
             maxheitime = j["MaxHeight"]["DateTime"]
+            datetime = (j["MaxHeight"]["DateTime"])[:16]
             maxheitimeh = maxheitime[11:13]
             if int(maxheitimeh) > 12:
                 maxheitimeh = int(maxheitimeh) - 12
@@ -125,17 +130,51 @@ for i in item:
             maxheitime = f"{maxheitimeh}時{maxheitimem}分　"
         except:
             maxheitime = ""
+            datetime = "0000-00-00T00:00"
+        
         try:
             height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
+            heightcm = height.split("．")[1].replace("ｍ","０ｃｍ")
+            heightcm = heightcm.replace("００ｃｍ","")
+            heightm = height.split("．")[0] + "ｍ"
+            if heightm == "０ｍ":
+                heightm = ""
+            height = heightm + heightcm
+            heightsor = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["#text"]
         except:
             height = j["MaxHeight"]["Condition"]
+            heightsor = j["MaxHeight"]["Condition"]
         try:
             if j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@condition"] == "上昇中":
                 rising = "(上昇中)"
+                n = 0.01
         except:
             rising = ""
-        print(f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}")
+        try:
+            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}{datetime}"] = (float(heightsor)+n)
+        except:
+            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}{datetime}"] = (0.0)
         if b == 1:
             break
     if a == 1:
         break
+
+for i in range(2):
+    height = sorted(sorted(dic1.items(), reverse=False, key = lambda d:d[0][-16:]), reverse=True, key = lambda d: d[1])
+
+    if oki == "（沖合）":
+        output = "沖合で津波を観測"
+        file(5)
+        log()
+    else:
+        output = "各検潮所で観測された津波の高さは次の通りです"
+        file(5)
+        log()
+
+    for i in height:
+        output = (i[0])[:-16]
+        file(5)
+        log()
+
+output = ""
+file(0)
