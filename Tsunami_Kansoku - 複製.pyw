@@ -138,6 +138,7 @@ for i in item:
         try:
             height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
             heightcm = height.split("．")[1].replace("ｍ","０ｃｍ")
+            heightcm = heightcm.replace("００ｃｍ","")
             heightm = height.split("．")[0] + "ｍ"
             if heightm == "０ｍ":
                 heightm = ""
