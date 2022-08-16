@@ -119,6 +119,7 @@ for i in item:
         ampm = ""
         try:
             maxheitime = j["MaxHeight"]["DateTime"]
+            datetime = (j["MaxHeight"]["DateTime"])[:16]
             maxheitimeh = maxheitime[11:13]
             if int(maxheitimeh) > 12:
                 maxheitimeh = int(maxheitimeh) - 12
@@ -135,6 +136,8 @@ for i in item:
             maxheitime = f"{maxheitimeh}時{maxheitimem}分　"
         except:
             maxheitime = ""
+            datetime = "0000-00-00T00:00"
+        
         try:
             height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
             heightcm = height.split("．")[1].replace("ｍ","０ｃｍ")
@@ -154,9 +157,9 @@ for i in item:
         except:
             rising = ""
         try:
-            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}"] = (float(heightsor)+n)
+            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}{datetime}"] = (float(heightsor)+n)
         except:
-            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}"] = (0.0)
+            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}{datetime}"] = (0.0)
         if b == 1:
             break
     if a == 1:
@@ -172,10 +175,10 @@ def s1(x):
         if i=='　':
             a+=1
         if a==2:
-            return x[0][b+3:b+7]
+            return x[0][-16:]
         b+=1
 
-height = sorted(sorted(dic1.items(), reverse=True, key = lambda d:s1(d)), reverse=True, key = lambda d: d[1])
+height = sorted(sorted(dic1.items(), reverse=False, key = lambda d:s1(d)), reverse=True, key = lambda d: d[1])
 
 if oki == "（沖合）":
     output = "沖合で津波を観測"
@@ -184,10 +187,5 @@ else:
     output = "各検潮所で観測された津波の高さは次の通りです"
     file(1)
 
-# for i in height:
-#     output = i[0]
-#     file(1)
-a=0
-b=0
 for i in height:
-    print(i[0])
+    print((i[0])[:-16])
