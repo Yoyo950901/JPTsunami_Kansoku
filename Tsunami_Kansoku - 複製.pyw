@@ -172,8 +172,7 @@ def s1(x):
         if i=='　':
             a+=1
         if a==2:
-            print(x[0][b+2:b+6])
-            return x[0][b+2:b+6]
+            return x[0][b+3:b+7]
         b+=1
 
 height = sorted(sorted(dic1.items(), reverse=True, key = lambda d:s1(d)), reverse=True, key = lambda d: d[1])
@@ -185,6 +184,10 @@ else:
     output = "各検潮所で観測された津波の高さは次の通りです"
     file(1)
 
+# for i in height:
+#     output = i[0]
+#     file(1)
+a=0
+b=0
 for i in height:
-    output = i[0]
-    file(1)
+    print(i[0])
