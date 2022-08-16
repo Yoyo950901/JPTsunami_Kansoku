@@ -160,7 +160,19 @@ for i in item:
 
 
 # print(dic1)
-height = sorted(dic1.items(), reverse=True, key = lambda d: d[1])
+
+def s1(x):
+    a=0
+    b=0
+    for i in x[0]:
+        if i=='　':
+            a+=1
+        if a==2:
+            print(x[0][b+2:b+6])
+            return x[0][b+2:b+6]
+        b+=1
+
+height = sorted(sorted(dic1.items(), reverse=True, key = lambda d:s1(d)), reverse=True, key = lambda d: d[1])
 
 for i in height:
     print(i[0])
