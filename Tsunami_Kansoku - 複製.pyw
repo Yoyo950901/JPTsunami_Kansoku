@@ -95,13 +95,15 @@ if "取消" in data["Head"]["InfoType"]: #判定是否取消
 
 oki = ""
 if "沖合" in title: #判定是否為"沖合津波観測"
-    oki = "沖合"
+    oki = "（沖合）"
+    
 
 print(title)
 
 
 
 a = 0
+n = 0
 dic1 = {}
 list2 = []
 for i in item:
@@ -136,6 +138,7 @@ for i in item:
         try:
             height = j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@description"]
             heightcm = height.split("．")[1].replace("ｍ","０ｃｍ")
+            heightcm = heightcm.replace("００ｃｍ","")
             heightm = height.split("．")[0] + "ｍ"
             if heightm == "０ｍ":
                 heightm = ""
@@ -147,12 +150,13 @@ for i in item:
         try:
             if j["MaxHeight"]["jmx_eb:TsunamiHeight"]["@condition"] == "上昇中":
                 rising = "(上昇中)"
+                n = 0.01
         except:
             rising = ""
         try:
-            dic1[f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}"] = (float(heightsor))
+            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}"] = (float(heightsor)+n)
         except:
-            dic1[f"津波観測　{name}　{ampm}{maxheitime}{height}{rising}"] = (0.0)
+            dic1[f"津波観測{oki}　{name}　{ampm}{maxheitime}{height}{rising}"] = (0.0)
         if b == 1:
             break
     if a == 1:
@@ -174,5 +178,13 @@ def s1(x):
 
 height = sorted(sorted(dic1.items(), reverse=True, key = lambda d:s1(d)), reverse=True, key = lambda d: d[1])
 
+if oki == "（沖合）":
+    output = "沖合で津波を観測"
+    file(1)
+else:
+    output = "各検潮所で観測された津波の高さは次の通りです"
+    file(1)
+
 for i in height:
-    print(i[0])
+    output = i[0]
+    file(1)
