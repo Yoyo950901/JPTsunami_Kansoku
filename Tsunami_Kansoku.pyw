@@ -65,7 +65,7 @@ def file(y=8): #寫入資料到output文字檔
 # url = "http://www.yoyo0901.byethost16.com/津波観測/32-39_12_06_191025_VTSE51.xml"
 # url = "http://www.yoyo0901.byethost16.com/津波観測/32-39_12_05_191025_VTSE52.xml"
 
-xml2 = requests.get(url) #取得資料
+xml2 = requests.get(url) #取得資料.
 
 headers1 = dict() #測試用網站需cookie
 headers1["Cookie"]="__test=eb3f55df3488e2eb5ad76e961a3d8e90"
