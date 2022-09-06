@@ -67,10 +67,10 @@ def file(y=8): #寫入資料到output文字檔
 
 xml2 = requests.get(url) #取得資料
 
-headers1 = dict() #測試用網站需cookie
-headers1["Cookie"]="__test=eb3f55df3488e2eb5ad76e961a3d8e90"
+# headers1 = dict() #測試用網站需cookie
+# headers1["Cookie"]="__test=eb3f55df3488e2eb5ad76e961a3d8e90"
 
-xml2 = requests.get(url,headers=headers1)
+# xml2 = requests.get(url,headers=headers1)
 
 xml2.encoding = "utf-8"
 xml2=xmltodict.parse(xml2.text) #XML轉JSON
