@@ -114,7 +114,7 @@ for i in item: #此區將各地海嘯觀測資料寫入到"dic1"字典裡
             maxheitime = j["MaxHeight"]["DateTime"]
             datetime = (j["MaxHeight"]["DateTime"])[:16]
             maxheitimeh = maxheitime[11:13] #將24小時制轉為12小時制，並優化顯示格式
-            if int(maxheitimeh) > 12:
+            if int(maxheitimeh) >= 12:
                 maxheitimeh = int(maxheitimeh) - 12
                 ampm = "午後"
             else:
