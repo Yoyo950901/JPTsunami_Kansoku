@@ -33,7 +33,7 @@ z = ""
 for i in sp.select("entry"): #搜尋標題為"津波警報・注意報・予報a"的XML
     if "津波情報a" in i.title.text or "沖合の津波観測に関する情報" in i.title.text and "津波観測" in i.content.text: #沖合の津波観測に関する情報 津波情報a
         url = i.id.text #若取得海嘯觀測的資料 設定URL
-        logid2 = i.update.text
+        logid2 = i.updated.text
         if logid1 == logid2: #判定情報是否為新的
           exit()
         f = open("D:\地震\Tsunami\jmalog.txt", "w",encoding="utf8")
